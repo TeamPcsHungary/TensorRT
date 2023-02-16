@@ -94,7 +94,7 @@ T5TRTBenchmarkingArgs = namedtuple("T5TRTBenchmarkingArgs", ["input_seq_len", "o
 
 class T5ModelTRTConfig(NNConfig):
 
-    TARGET_MODELS = ["t5-small", "t5-base", "t5-large", "t5-3b", "t5-11b"]
+    TARGET_MODELS = ["t5-small", "t5-base", "t5-large", "t5-3b", "t5-11b", "t5-cosmo-xl"]
     
     # TensorRT maximum workspace size for each model variant. Set by TensorRT memory_pool_limits API
     MAX_ENCODER_WORKSPACE_MB = {
@@ -103,6 +103,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 2048,
         TARGET_MODELS[3]: 3072,
         TARGET_MODELS[4]: 4096,
+        TARGET_MODELS[5]: 3072,
     }
 
     MAX_DECODER_WORKSPACE_MB = {
@@ -111,6 +112,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 3072,
         TARGET_MODELS[3]: 4096,
         TARGET_MODELS[4]: 5120,
+        TARGET_MODELS[5]: 4096,
     }
 
     MAX_SEQUENCE_LENGTH = {
@@ -119,6 +121,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 1024,
         TARGET_MODELS[3]: 1024,
         TARGET_MODELS[4]: 1024,
+        TARGET_MODELS[5]: 2048,
     }
 
     # To achieve identical results with original HuggingFace implementation, the min_length in model config should be consistent with each model variant
@@ -129,6 +132,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 0,
         TARGET_MODELS[3]: 0,
         TARGET_MODELS[4]: 0,
+        TARGET_MODELS[5]: 0,
     } 
 
     #TODO: this might better be an inference time input like the `max_length` arg in generate() and greedy_search(). The change needed is in NNDF/interface.py:__call__ so it's a fundamental change affecting GPT2 and T5 code. Here I just put this option in T5 model config for now. But it's also reasonable to treat this as a model config, because the TRT engine building may need this to have fixed dimension (e.g., to enable KV-cache)
@@ -139,6 +143,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 1024,
         TARGET_MODELS[3]: 1024,
         TARGET_MODELS[4]: 1024,
+        TARGET_MODELS[5]: 2048,
     } 
 
     # This parameter should be using HuggingFace config, but this file is locked by test and cannot import transformers, so hardcoded here
@@ -148,6 +153,7 @@ class T5ModelTRTConfig(NNConfig):
         TARGET_MODELS[2]: 24,
         TARGET_MODELS[3]: 24,
         TARGET_MODELS[4]: 24,
+        TARGET_MODELS[5]: 24,
     }
     NETWORK_FULL_NAME = "full"
     NETWORK_DECODER_SEGMENT_NAME = "decoder"
